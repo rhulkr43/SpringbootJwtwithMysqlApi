@@ -8,6 +8,7 @@ import javax.validation.Valid;
 import org.aspectj.weaver.ast.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -43,14 +44,14 @@ public class UserController {
 		return "welcome";
 	}
 	
-	@GetMapping(value = "/list")
+	@GetMapping(value = "/list",produces = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public ResponseEntity<Object> getUserList() {
 		
 		return new ResponseEntity<Object>(userServiceImp.getUserList(), HttpStatus.OK);
 	}
 
 	
-	@PostMapping(value = "/save")
+	@PostMapping(value = "/save",produces = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public ResponseEntity<Object> addUser(@Valid @RequestBody User user)
 	{
 		User user2=userServiceImp.getUserbyName(user.getUsername());
@@ -70,12 +71,12 @@ public class UserController {
 		return new ResponseEntity<Object>("User Delete Successfull",HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/view/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/view/{id}", method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public ResponseEntity<Object> getById(@PathVariable("id") Long id){
 		return new ResponseEntity<Object>(userServiceImp.getUserByid(id),HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/update",method= RequestMethod.PUT)
+	@RequestMapping(value = "/update",method= RequestMethod.PUT,produces = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public ResponseEntity<Object> update(@RequestBody User user){
 		User user2=userServiceImp.getUserByid(user.getId());
 		if(user2==null) {
@@ -90,5 +91,10 @@ public class UserController {
 			userServiceImp.addUser(user2);
 			return new ResponseEntity<Object>("User Update Successfull",HttpStatus.OK);
 		}
+	}
+	
+	@RequestMapping(value = "/getUser/{username}",method = RequestMethod.GET)
+	public ResponseEntity<Object> getUserByUsername(@PathVariable("username") String username) {
+		return new ResponseEntity<Object>(userServiceImp.getUserbyName(username),HttpStatus.OK);
 	}
 }

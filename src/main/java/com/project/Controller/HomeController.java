@@ -2,6 +2,7 @@ package com.project.Controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,17 +26,18 @@ public class HomeController {
 	
 	@Autowired
 	private AuthenticationManager authenticationManager;
-	@RequestMapping(value = "/token",method = RequestMethod.POST)
+	@RequestMapping(value = "/token",method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> generateToken(@RequestBody JwtRequest jwtRequest) throws Exception{
 		try {
 			this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(jwtRequest.getUsername(), jwtRequest.getPassword()));
-			
+			UserDetails userDetails=this.customerUserDetailServices.loadUserByUsername(jwtRequest.getUsername());
+			String token=this.jwtutill.generateToken(userDetails);
+			return ResponseEntity.ok(new JwtResponse(token));
 		}catch (Exception e) {
 			System.out.println(e);
-			throw new Exception("Bad Credential");
+			return (ResponseEntity<?>) ResponseEntity.status(403);
+			
 		}
-		UserDetails userDetails=this.customerUserDetailServices.loadUserByUsername(jwtRequest.getUsername());
-		String token=this.jwtutill.generateToken(userDetails);
-		return ResponseEntity.ok(new JwtResponse(token));
+		
 	}
 }
