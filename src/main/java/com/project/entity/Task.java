@@ -71,6 +71,9 @@ public class Task {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+	public Long getTask_id() {
+		return task_id;
+	}
 	
 
 }
