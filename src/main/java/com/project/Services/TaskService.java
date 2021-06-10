@@ -20,13 +20,18 @@ public class TaskService {
 	}
 	
 	public List<Task> getAllTask(){
-		return taskRepository.findAll();
+		return (List<Task>) taskRepository.findAll();
 	}
 	
 	public Task getTask(Long id) {
 		return taskRepository.findById(id).get();
 	}
+	
+	
+	
+	
 
+	
 	
 	
 	
