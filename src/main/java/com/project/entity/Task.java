@@ -25,11 +25,19 @@ public class Task {
 	private boolean IsActive;
 	private Integer user_id;
 	
+	private String attachment;
+	
 	@ManyToOne
 	@JoinColumn(name = "user_id", referencedColumnName = "id", insertable = false, updatable = false)
 
 	private User user;
 	
+	public String getAttachment() {
+		return attachment;
+	}
+	public void setAttachment(String attachment) {
+		this.attachment = attachment;
+	}
 	public User getUser() {
 		return user;
 	}
